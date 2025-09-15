@@ -10,13 +10,13 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get tag
         id: tag
         run: |
           echo ::set-output name=tag::${GITHUB_REF#refs/tags/v}
       - name: Setup python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: 3.9
       - name: Upgrade packages
@@ -26,7 +26,7 @@ jobs:
       - name: Build tarball
         run: python setup.py bdist --formats=gztar --plat-name linux
       - name: Upload tarball
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: linux-tarball
           path: ./dist/loguru-mypy-${{ steps.tag.outputs.tag }}.linux.tar.gz
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
           ref: ${{ github.head_ref }}
@@ -51,7 +51,7 @@ jobs:
         run: mkdir -p release/
       - name: Generator changelog
         id: generate-changelog
-        uses: heinrichreimer/action-github-changelog-generator@v2.3
+        uses: heinrichreimer/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.PAT }}
           base: CHANGELOG.md
@@ -64,7 +64,7 @@ jobs:
           excludeLabels: dependabot,test-requirements,wontfix
           output: release/CHANGELOG.md
       - name: Download Linux tarball
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: linux-tarball
           path: release/
@@ -108,7 +108,7 @@ jobs:
           asset_name: README.md
           asset_content_type: text/markdown
       - name: Commit changelog
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Release ${{ github.ref }}
           file_pattern: CHANGELOG.md
@@ -118,8 +118,8 @@ jobs:
       - GH
     runs-on: ubuntu-20.04
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
       - run: |
           pip install --upgrade pip
           pip install --upgrade setuptools wheel twine

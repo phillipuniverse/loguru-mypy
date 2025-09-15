@@ -15,13 +15,13 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
       - name: Generate changelog
-        uses: heinrichreimer/action-github-changelog-generator@v2.3
+        uses: heinrichreimer/action-github-changelog-generator@v2.4
         with:
           token: ${{ secrets.PAT }}
           stripGeneratorNotice: true
@@ -31,14 +31,14 @@ jobs:
           prWoLabels: true
           excludeLabels: dependabot,test-requirements,wontfix
       - name: Upload changelog
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CHANGELOG.zip
           path: CHANGELOG.md
           if-no-files-found: error
           retention-days: 1
       - name: Commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: Update Changelog
           file_pattern: CHANGELOG.md
